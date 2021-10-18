@@ -60,6 +60,7 @@ chart = new Chart(context, config);
 function generateData() {
   randomTemperature = (Math.random() * Math.floor(50)).toFixed(2); // Deux chiffres après la virgule
   addTemperature(new Date().toLocaleTimeString(), randomTemperature);
+
 }
 
 function addTemperature(time, temperature) {
