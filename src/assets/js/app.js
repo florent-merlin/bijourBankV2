@@ -13,9 +13,7 @@ function money(montant){
 // recuperer et injecter les données dans le HTML
 function template(operation){
   const debitOrCredit = operation.credit ? 'credit' : 'debit';
-  const img = operation.credit 
-    ? './assets/images/sac-dargent.png' 
-    : './assets/images/depenses.png';
+  const img = operation.credit ? './assets/images/sac-dargent.png' : './assets/images/depenses.png';
 
   return ` 
   <div class="operation ${debitOrCredit}">
@@ -45,13 +43,13 @@ function template(operation){
 // fonction pour calculer la "lecture des operations"
 function operationsLengthData(operationsData){
   if (operationsData.length === 0){
-    operationList.innerHTML = '<center>aucune operation</center>';
-  } else {operationList.innerHTML = '';
-    operationsData.foreach((calcul) => {
+    operationsList.innerHTML = '<center>aucune operation</center>';
+  } else {operationsList.innerHTML = '';
+    operationsData.forEach((calcul) => {
         // calcul ratio
-        const total = operation.credit ? totalCredit(operationsData) : totalDebit(operationsData);
+        const total = calcul.credit ? totalCredit(operationsData) : totalDebit(operationsData);
         calcul.ratio = ((calcul.total * 100) / total).toFixed(2);
-        operationList.innerHTML += template(calcul);
+        operationsList.innerHTML += template(calcul);
       });
   }
 }
@@ -62,7 +60,7 @@ function allGraph(operationsData){
   config.data.labels = [];
   config.data.datasets[0].data = [];
   chart.update();
-  operationsData.foreach((calcul) => { 
+  operationsData.forEach((calcul) => { 
     const label = `${calcul.title} (${calcul.credit ? '+' : '-'} ${calcul.total})`; 
     solde = calcul.credit ? solde + calcul.total : solde - calcul.total;
     addTemperature(label, solde);
@@ -111,11 +109,11 @@ function totalDebit(operationsData){
 }
 
 // fonction pour menu actif "boutton" du form (action au click) debit/credit
-function menu(elt){
+function menu(eltMenu){
   all.removeAttribute('class', 'active');
   credit.removeAttribute('class', 'active');
   debit.removeAttribute('class', 'active');
-  elt.setAttribute('class', 'active');
+  eltMenu.setAttribute('class', 'active');
 }
 
 // fonction afficher btSubmit formulaire ds le main
@@ -130,7 +128,7 @@ function submitForm(operationForm) {
 // 
 const all = document.querySelector('.navHeader a');
 all.addEventListener('click', (e) => {
-  activeMenu(all);
+  menu(all);
   operationsLengthData(operationsData);
   allGraph(operationsData);
 });
@@ -138,7 +136,7 @@ all.addEventListener('click', (e) => {
 // page credit
 const credit = document.querySelector('.navHeader a:nth-child(2)');
 credit.addEventListener('click', (e) => {
-  activeMenu(credit);
+  menu(credit);
   operationsLengthData(operationsData.filter((calcul) => calcul.credit));
   allGraph(operationsData);
 });
@@ -146,7 +144,7 @@ credit.addEventListener('click', (e) => {
 // page debit
 const debit = document.querySelector('.navHeader a:nth-child(3)');
 debit.addEventListener('click', (e) => {
-  activeMenu(debit);
+  menu(debit);
   operationsLengthData(operationsData.filter((calcul) => !calcul.credit));
   allGraph(operationsData);
 });
@@ -182,7 +180,7 @@ if (localStorage.getItem('datas')) {
 }
 
 //----- Affichage principal ------------- 
-const operationList = document.querySelector('main .grid-container');
+const operationsList = document.querySelector('main .grid-container');
 setHeader(operationsData);
 operationsLengthData(operationsData);
 allGraph(operationsData);
